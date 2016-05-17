@@ -1,5 +1,6 @@
 require 'xlua'
 require 'lfs'
+require 'image'
 
 local publicClass={}
 
@@ -21,8 +22,24 @@ end
 
 function publicClass.get_images(path)
   local folders = get_files(path)
+  local classes = {}
+  local class_i = 1
 
   for folder in folders do
+    local image_files = get_files(folder)
+    local class = {}
+    local image_file_i
+
+    for image_file in image_files do
+      class[image_file_i] = image.load(image_file)
+      image_file_i += 1
+    end
+
+    class[class_i] = class
+    class_i += 1
+  end
+
+  return classes
 
 end
 
