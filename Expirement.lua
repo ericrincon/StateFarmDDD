@@ -8,6 +8,4 @@ cmd:option('-learning_rate', .001, 'learning rate')
 
 params = cmd:parse(arg)
 
-train_images = data_loader.get_files("imgs/train/")
-
-print(train_images)
+train_images, class_dict = data_loader.get_image_paths_labels('imgs/train')
