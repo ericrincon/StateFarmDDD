@@ -16,3 +16,4 @@ train_images, class_dict = data_loader.get_image_paths_labels('imgs/train')
 mb_generator = mbgenerator(train_images, class_dict, 32)
 
 cnn = cnn()
+cnn:train(1, mb_generator)
