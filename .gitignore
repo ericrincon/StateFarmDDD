@@ -2,3 +2,9 @@
 *.csv
 
 *.jpg
+
+*.xml
+
+*.iml
+
+.idea/.name

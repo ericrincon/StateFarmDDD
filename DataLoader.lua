@@ -54,7 +54,17 @@ function publicClass.get_image_paths_labels(path)
 end
 
 function publicClass.load_images(image_paths, class_dict)
+  local images = {}
+  local labels = {}
 
+  for i = 1, table.getn(image_paths) do
+    local image_path = image_paths[i]
+
+    images[i] = image.load(image_path)
+    labels[i] = class_dict[image_path]
+  end
+
+  return images, labels
 end
 
 return publicClass
