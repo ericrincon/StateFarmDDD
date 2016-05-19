@@ -53,4 +53,8 @@ function publicClass.get_image_paths_labels(path)
   return images, class_dict
 end
 
+function publicClass.load_images(image_paths, class_dict)
+
+end
+
 return publicClass

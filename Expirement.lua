@@ -1,4 +1,7 @@
 require 'torch'
+require 'image'
+require 'cnn'
+
 local data_loader = require 'DataLoader'
 
 -- Used for parsing arguements from the command line
@@ -9,3 +12,7 @@ cmd:option('-learning_rate', .001, 'learning rate')
 params = cmd:parse(arg)
 
 train_images, class_dict = data_loader.get_image_paths_labels('imgs/train')
+
+cnn = cnn()
+cnn:train(10)
+print(cnn.model)
