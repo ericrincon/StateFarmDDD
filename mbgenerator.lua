@@ -12,11 +12,20 @@ mbgenerator = class(function(a, image_paths, class_dict, mb_size)
    a.class_dict = class_dict
    a.last_index = 1
    a.mb_size = mb_size
+
 end)
 
 function mbgenerator:next()
-  local indices = self.permuted_table[{{self.last_index,
-                                        self.last_index + self.mb_size - 1}}]
+  local end_of_batch = self.last_index + self.mb_size - 1
+
+  if self.last_index + self.mb_size - 1 > self.n_examples then
+    end_of_batch = self.n_examples
+  end
+
+
+  local indices = self.permuted_table[{{self.last_index, end_of_batch}}]
+
+
   local batch_image_paths = utils.get_from_table(indices, self.image_paths)
 
   self.last_index = self.last_index + self.mb_size
@@ -34,5 +43,9 @@ function mbgenerator:next()
     label_batch[{i}] = label
   end
 
-  return image_batch, label_batch
+  if end_of_data then
+    return nil, nil
+  else
+    return image_batch, label_batch
+  end
 end

@@ -71,21 +71,28 @@ function cnn:train(epochs, mb_generator)
     -- because the model's weight and bias gradient tensors
     -- are simply views onto gradParams
     print('Epoch: ' .. epoch)
-    batch_inputs, batch_labels = mb_generator:next()
 
-    local function feval(params)
-      gradParams:zero()
+    while true do
+      batch_inputs, batch_labels = mb_generator:next()
 
-      local outputs = self.model:forward(batch_inputs)
-      local loss = criterion:forward(outputs, batch_labels)
-      local dloss_doutput = criterion:backward(outputs, batch_labels)
+      if batch_inputs == nil and batch_labels == nil then
+        break
+      end
 
-      self.model:backward(batch_inputs, dloss_doutput)
+      local function feval(params)
+        gradParams:zero()
 
-      return loss, gradParams
+        local outputs = self.model:forward(batch_inputs)
+        local loss = criterion:forward(outputs, batch_labels)
+        local dloss_doutput = criterion:backward(outputs, batch_labels)
+
+        self.model:backward(batch_inputs, dloss_doutput)
+
+        return loss, gradParams
+      end
+
+      optim.sgd(feval, params, optimState)
     end
-
-    optim.sgd(feval, params, optimState)
 
   end
 
