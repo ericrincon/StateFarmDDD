@@ -18,12 +18,21 @@ function mbgenerator:next()
   local indices = self.permuted_table[{{self.last_index,
                                         self.last_index + self.mb_size - 1}}]
   local batch_image_paths = utils.get_from_table(indices, self.image_paths)
-  local batch_label_paths = utils.get_from_table(indices, self.class_dict)
 
   self.last_index = self.last_index + self.mb_size
 
   local images, labels = data_loader.load_images(batch_image_paths,
-                                                      batch_label_paths)
+                                                      self.class_dict)
+  local size = images[1]:size()
+  local image_batch = torch.Tensor(self.mb_size, size[1], size[2], size[3])
+  local label_batch = torch.zeros(self.mb_size)
 
-  return images, labels
+  for i = 1, self.mb_size do
+    local label = labels[i]
+
+    image_batch[{{i}, {}, {}, {}}] = images[i]
+    label_batch[{i}] = label
+  end
+
+  return image_batch, label_batch
 end

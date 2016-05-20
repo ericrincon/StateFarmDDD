@@ -37,17 +37,17 @@ function publicClass.get_image_paths_labels(path)
     local image_files = publicClass.get_dir_items(folder)
     local split_class = folder:split('/')
     local last_index = table.getn(split_class)
-    local class = split_class[last_index]
+
+    -- Adjust because of 1 indexing
+    local class = tonumber(split_class[last_index]:sub(2, 2)) + 1
 
     for image_file_i = 1, table.getn(image_files) do
       image_file = image_files[image_file_i]
       images[image_i] = image_file
-      class_dict[image_i] = class
+      class_dict[image_file] = class
+
       image_i = image_i + 1
     end
-
-    class_dict[class_i] = class
-    class_i = class_i + 1
   end
 
   return images, class_dict
@@ -63,7 +63,7 @@ function publicClass.load_images(image_paths, class_dict)
     images[i] = image.load(image_path)
     labels[i] = class_dict[image_path]
   end
-
+  
   return images, labels
 end
 
