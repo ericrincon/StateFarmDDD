@@ -13,7 +13,7 @@ params = cmd:parse(arg)
 
 train_images, class_dict = data_loader.get_image_paths_labels('imgs/train')
 
-mb_generator = mbgenerator(train_images, class_dict, 32)
+mb_generator = mbgenerator(train_images, class_dict, 64)
 
 cnn = cnn()
 cnn:train(20, mb_generator)

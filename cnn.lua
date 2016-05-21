@@ -5,6 +5,7 @@ require 'math'
 
 -- Alexnet as baseline 8 conv layers 3 dense layers
 -- Old I know...
+classes = {'1','2','3','4','5','6','7','8','9','10'}
 
 cnn = class(function(a)
    a.name = name
@@ -62,6 +63,7 @@ function cnn:train(epochs, mb_generator)
   local params, gradParams = self.model:getParameters()
   local criterion = nn.CrossEntropyCriterion()
   local optimState = {learningRate=0.01}
+  local confusion = optim.ConfusionMatrix(classes)
 
   for epoch = 1, epochs do
     -- local function we give to optim
@@ -71,6 +73,9 @@ function cnn:train(epochs, mb_generator)
     -- because the model's weight and bias gradient tensors
     -- are simply views onto gradParams
     print('Epoch: ' .. epoch)
+    local t = 1, mb_generator:size(), mb_generator:batch_size()
+
+    xlua.progress(t, mb_generator:size())
 
     while true do
       batch_inputs, batch_labels = mb_generator:next()
@@ -92,8 +97,9 @@ function cnn:train(epochs, mb_generator)
       end
 
       optim.sgd(feval, params, optimState)
+      xlua.progress(t, mb_generator:size())
+      t = t + 1, mb_generator:size(), mb_generator:batch_size()
     end
-
   end
 
 

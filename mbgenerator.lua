@@ -49,3 +49,11 @@ function mbgenerator:next()
     return image_batch, label_batch
   end
 end
+
+function mbgenerator:size()
+  return self.n_examples
+end
+
+function mbgenerator:batch_size()
+  return self.mb_size
+end
